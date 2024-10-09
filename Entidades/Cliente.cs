@@ -7,7 +7,7 @@ namespace Interfocus.Models
     {
         public Guid Id { get; private set; }
         public string Nome { get; set; }
-        public int IdContrato { get; set; }
+        public int IdContrato { get; set; } 
         public string CpfCnpj { get; set; }
         public int? IdCidade { get; set; }
         public int? IdEstado { get; set; }
