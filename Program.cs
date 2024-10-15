@@ -1,5 +1,4 @@
 using ApiCrud.Data;
-using ApiCrud.Rotas;
 using Interfocus;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<AppDbContext>();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -22,6 +22,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-ClienteRota.RotasClientes(app);
+app.MapControllers();
 
 app.Run();

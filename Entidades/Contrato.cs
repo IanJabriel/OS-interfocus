@@ -20,5 +20,7 @@ namespace Interfocus.Models
             IdEquipamento = idEquipamento;
             StatusContrato = statusContrato;
         }
+
+        public Contrato() { }
     }
 }

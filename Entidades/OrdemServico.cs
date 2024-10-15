@@ -5,7 +5,7 @@ namespace Interfocus.Models
 {
     public class OrdemServico
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public Guid IdTipoServico { get; set; }
         public DateTime DataAgendamento { get; set; }
         public Guid IdContrato { get; set; }
@@ -17,10 +17,9 @@ namespace Interfocus.Models
         public List<OcorrenciaOS> OcorrenciasOS { get; set; } = new List<OcorrenciaOS>();
         public StatusOS StatusOS { get; set; }
 
-        public OrdemServico(Guid idTipoServico, DateTime dataAgendamento, Guid idContrato, Guid idCliente, Guid idStatusOS, Guid idFuncionarioAbriu, Guid idFuncionarioFechou)
+        public OrdemServico(Guid idTipoServico, DateTime dataAgendamento, Guid idContrato, Guid idCliente, Guid idStatusOS, Guid idFuncionarioAbriu, Guid? idFuncionarioFechou)
         {
-            Id = Guid.NewGuid();
-            IdTipoServico = IdTipoServico;
+            IdTipoServico = idTipoServico;
             DataAgendamento = dataAgendamento;
             IdContrato = idContrato;
             IdCliente = idCliente;
@@ -28,6 +27,8 @@ namespace Interfocus.Models
             IdFuncionarioAbriu = idFuncionarioAbriu;
             IdFuncionarioFechou = idFuncionarioFechou;
         }
+
+        public OrdemServico() { }
     }
 }
 //@DateTimeFormat(pattern = "dd/MM/yyyy")

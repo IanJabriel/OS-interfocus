@@ -4,6 +4,6 @@ namespace Interfocus.Models
 {
     public class Funcionario
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
     }
 }

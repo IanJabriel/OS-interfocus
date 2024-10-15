@@ -148,6 +148,8 @@ public static class ModelBuilderExtensions
                 .WithMany()
                 .HasForeignKey(o => o.IdStatusOS)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(o => o.IdFuncionarioFechou) .IsRequired(false);
         });
     }
 }

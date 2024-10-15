@@ -14,5 +14,7 @@ namespace Interfocus.Models
             Id = Guid.NewGuid();
             Descricao = descricao ?? throw new ArgumentException(nameof(descricao));
         }
+
+        public StatusOS() { }
     }
 }

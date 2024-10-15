@@ -15,5 +15,7 @@ namespace Interfocus.Models
         {
             Descricao = descricao ?? throw new ArgumentNullException(nameof(descricao));
         }
+
+        public TipoServico() { }
     }
 }
