@@ -81,11 +81,6 @@ public static class ModelBuilderExtensions
         {
             entity.HasKey(o => o.Id);
 
-            entity.HasOne(o => o.OrdemServico)
-                .WithMany(os => os.OcorrenciasOS)
-                .HasForeignKey(o => o.IdOrdemServico)
-                .OnDelete(DeleteBehavior.Cascade);
-
             entity.HasOne(o => o.Ocorrencia)
                 .WithMany()
                 .HasForeignKey(o => o.IdOcorrencia)
@@ -138,11 +133,6 @@ public static class ModelBuilderExtensions
 
             entity.Property(o => o.DataAgendamento)
                 .IsRequired();
-
-            entity.HasMany(o => o.OcorrenciasOS)
-                .WithOne(os => os.OrdemServico)
-                .HasForeignKey(os => os.IdOrdemServico)
-                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(o => o.StatusOS)
                 .WithMany()
