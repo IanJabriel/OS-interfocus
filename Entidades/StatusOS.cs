@@ -1,17 +1,25 @@
-﻿using System;
+﻿using ApiCrud.Migrations;
+using System;
 
 namespace Interfocus.Models
 {
     public class StatusOS
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Descricao { get; set; }
+        public StatusTipo Tipo { get; set; }
 
-        public OrdemServico OrdemServico { get; set; }
+        public enum StatusTipo
+        {
+            Aberto = 1,
+            Fechado = 2,
+            EmProgresso = 3,
+            Cancelado = 4
+        }
 
-        public StatusOS(string descricao)
+        public StatusOS(StatusTipo tipo,string descricao)
         { 
-            Id = Guid.NewGuid();
+            Tipo = tipo;
             Descricao = descricao ?? throw new ArgumentException(nameof(descricao));
         }
 
