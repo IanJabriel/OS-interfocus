@@ -36,9 +36,6 @@ public class OcorrenciaOSController : ControllerBase
         var oldOcorrenciaOS = ocorrenciasOS.FirstOrDefault(o => o.Id == id);
         if (oldOcorrenciaOS == null) return NotFound();
 
-        oldOcorrenciaOS.IdOrdemServico = ocorrenciaOS.IdOrdemServico;
-        oldOcorrenciaOS.IdOcorrencia = ocorrenciaOS.IdOcorrencia;
-
         return Ok();
     }
 

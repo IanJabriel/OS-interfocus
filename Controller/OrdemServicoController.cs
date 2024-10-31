@@ -36,9 +36,14 @@ public class OrdemServicoController : ControllerBase
         {
             Id = ordemServico.IdStatusOS,
             Descricao = "Aberto",
+<<<<<<< HEAD
             //Tipo = StatusOS.StatusTipo.Aberto
         };
         ordemServico.IdFuncionarioFechou = null;
+=======
+            Tipo = StatusOS.StatusTipo.Aberto
+        };
+>>>>>>> 88eb72c29b05448fcc528a5615627b40851a9771
 
         ordensServico.Add(ordemServico);
         return CreatedAtAction(nameof(Get), new { id = ordemServico.Id }, ordemServico);

@@ -10,28 +10,32 @@ namespace Interfocus.Models
         public DateTime DataAgendamento { get; set; }
         public Guid IdContrato { get; set; }
         public Guid IdCliente { get; set; }
-        public Guid IdStatusOS { get; set; }
+        public int IdStatusOS { get; set; }
         public Guid IdFuncionarioAbriu { get; set; }
         public Guid? IdFuncionarioFechou { get; set; }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         public List<OcorrenciaOS> OcorrenciasOS { get; set; } = new List<OcorrenciaOS>();
 =======
 >>>>>>> Stashed changes
+=======
+        //public ICollection<OcorrenciaOS> OcorrenciasOS { get; set; } = new List<OcorrenciaOS>();
+>>>>>>> 88eb72c29b05448fcc528a5615627b40851a9771
         public StatusOS StatusOS { get; set; }
 
-        public OrdemServico(Guid idTipoServico, DateTime dataAgendamento, Guid idContrato, Guid idCliente, Guid idStatusOS, Guid idFuncionarioAbriu, Guid? idFuncionarioFechou)
+        public OrdemServico(Guid idTipoServico, DateTime dataAgendamento, Guid idContrato, Guid idCliente, Guid idFuncionarioAbriu, Guid? idFuncionarioFechou)
         {
             IdTipoServico = idTipoServico;
             DataAgendamento = dataAgendamento;
             IdContrato = idContrato;
             IdCliente = idCliente;
-            IdStatusOS = idStatusOS;
+            IdStatusOS = (int)StatusOS.StatusTipo.Aberto;
             IdFuncionarioAbriu = idFuncionarioAbriu;
             IdFuncionarioFechou = idFuncionarioFechou;
+            //OcorrenciasOS = new List<OcorrenciaOS>();
         }
 
-        public OrdemServico() { }
+        public OrdemServico(){ }
     }
 }
-//@DateTimeFormat(pattern = "dd/MM/yyyy")
