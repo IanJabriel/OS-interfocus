@@ -14,7 +14,10 @@ namespace Interfocus.Models
         public Guid IdFuncionarioAbriu { get; set; }
         public Guid? IdFuncionarioFechou { get; set; }
 
+<<<<<<< Updated upstream
         public List<OcorrenciaOS> OcorrenciasOS { get; set; } = new List<OcorrenciaOS>();
+=======
+>>>>>>> Stashed changes
         public StatusOS StatusOS { get; set; }
 
         public OrdemServico(Guid idTipoServico, DateTime dataAgendamento, Guid idContrato, Guid idCliente, Guid idStatusOS, Guid idFuncionarioAbriu, Guid? idFuncionarioFechou)
