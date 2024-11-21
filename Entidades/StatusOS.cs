@@ -12,13 +12,13 @@ namespace Interfocus.Models
         public enum StatusTipo
         {
             Aberto = 1,
-            Fechado = 2,
-            EmProgresso = 3,
-            Cancelado = 4
+            EmAndamento = 2,
+            Fechado = 3
         }
 
-        public StatusOS(StatusTipo tipo,string descricao)
-        { 
+        public StatusOS(int id,StatusTipo tipo,string descricao)
+        {
+            Id = id;
             Tipo = tipo;
             Descricao = descricao ?? throw new ArgumentException(nameof(descricao));
         }

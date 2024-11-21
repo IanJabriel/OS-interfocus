@@ -1,11 +1,19 @@
-﻿using System;
+﻿using Interfocus.Models;
 using Microsoft.EntityFrameworkCore;
-using Interfocus.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace ApiCrud.Data
 {
     public class AppDbContext : DbContext
     {
+        private readonly IConfiguration _configuration;
+
+        public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration)
+            : base(options)
+        {
+            _configuration = configuration;
+        }
+
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Contrato> Contratos { get; set; }
         public DbSet<Plano> Planos { get; set; }
@@ -19,7 +27,9 @@ namespace ApiCrud.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=Banco.sqlite");
+            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+            optionsBuilder.UseNpgsql(connectionString);
+
             base.OnConfiguring(optionsBuilder);
         }
 

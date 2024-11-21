@@ -1,12 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace ApiCrud.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,12 +16,12 @@ namespace ApiCrud.Migrations
                 name: "Clientes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Nome = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    IdContrato = table.Column<int>(type: "INTEGER", nullable: false),
-                    CpfCnpj = table.Column<string>(type: "TEXT", nullable: false),
-                    IdCidade = table.Column<int>(type: "INTEGER", nullable: true),
-                    IdEstado = table.Column<int>(type: "INTEGER", nullable: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Nome = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    IdContrato = table.Column<int>(type: "integer", nullable: false),
+                    CpfCnpj = table.Column<string>(type: "text", nullable: false),
+                    IdCidade = table.Column<int>(type: "integer", nullable: true),
+                    IdEstado = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -31,7 +32,7 @@ namespace ApiCrud.Migrations
                 name: "Funcionarios",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,9 +43,9 @@ namespace ApiCrud.Migrations
                 name: "Ocorrencias",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Descricao = table.Column<string>(type: "TEXT", nullable: false),
-                    Anexo = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Descricao = table.Column<string>(type: "text", nullable: false),
+                    Anexo = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,11 +53,25 @@ namespace ApiCrud.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StatusOS",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Descricao = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Tipo = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StatusOS", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TiposPlano",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Descricao = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Descricao = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -67,11 +82,11 @@ namespace ApiCrud.Migrations
                 name: "Contratos",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    IdCliente = table.Column<Guid>(type: "TEXT", nullable: false),
-                    IdEndereco = table.Column<int>(type: "INTEGER", nullable: false),
-                    IdEquipamento = table.Column<int>(type: "INTEGER", nullable: false),
-                    StatusContrato = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    IdCliente = table.Column<Guid>(type: "uuid", nullable: false),
+                    IdEndereco = table.Column<Guid>(type: "uuid", nullable: false),
+                    IdEquipamento = table.Column<Guid>(type: "uuid", nullable: false),
+                    StatusContrato = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,14 +100,38 @@ namespace ApiCrud.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OrdensServico",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    IdTipoServico = table.Column<Guid>(type: "uuid", nullable: false),
+                    DataAgendamento = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IdContrato = table.Column<Guid>(type: "uuid", nullable: false),
+                    IdCliente = table.Column<Guid>(type: "uuid", nullable: false),
+                    IdStatusOS = table.Column<int>(type: "integer", nullable: false),
+                    IdFuncionarioAbriu = table.Column<Guid>(type: "uuid", nullable: false),
+                    IdFuncionarioFechou = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrdensServico", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrdensServico_StatusOS_IdStatusOS",
+                        column: x => x.IdStatusOS,
+                        principalTable: "StatusOS",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Planos",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Descricao = table.Column<string>(type: "TEXT", nullable: false),
-                    IdTipo = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Combo = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Tier = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Descricao = table.Column<string>(type: "text", nullable: false),
+                    IdTipo = table.Column<Guid>(type: "uuid", nullable: false),
+                    Combo = table.Column<bool>(type: "boolean", nullable: false),
+                    Tier = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -102,16 +141,16 @@ namespace ApiCrud.Migrations
                         column: x => x.IdTipo,
                         principalTable: "TiposPlano",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade); 
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TiposServico",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Descricao = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    IdContrato = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Descricao = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    IdContrato = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -128,9 +167,10 @@ namespace ApiCrud.Migrations
                 name: "OcorrenciasOS",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    IdOrdemServico = table.Column<Guid>(type: "TEXT", nullable: false),
-                    IdOcorrencia = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    IdOrdemServico = table.Column<Guid>(type: "uuid", nullable: false),
+                    OrdemServicoId = table.Column<Guid>(type: "uuid", nullable: false),
+                    IdOcorrencia = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -141,39 +181,8 @@ namespace ApiCrud.Migrations
                         principalTable: "Ocorrencias",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrdensServico",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    IdTipoServico = table.Column<Guid>(type: "TEXT", nullable: false),
-                    DataAgendamento = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    IdContrato = table.Column<Guid>(type: "TEXT", nullable: false),
-                    IdCliente = table.Column<Guid>(type: "TEXT", nullable: false),
-                    IdStatusOS = table.Column<Guid>(type: "TEXT", nullable: false),
-                    FuncionarioAbriu = table.Column<Guid>(type: "TEXT", nullable: false),
-                    IdFuncionarioFechou = table.Column<Guid>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrdensServico", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StatusOS",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Descricao = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    OrdemServicoId = table.Column<Guid>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StatusOS", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StatusOS_OrdensServico_OrdemServicoId",
+                        name: "FK_OcorrenciasOS_OrdensServico_OrdemServicoId",
                         column: x => x.OrdemServicoId,
                         principalTable: "OrdensServico",
                         principalColumn: "Id",
@@ -191,9 +200,9 @@ namespace ApiCrud.Migrations
                 column: "IdOcorrencia");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OcorrenciasOS_IdOrdemServico",
+                name: "IX_OcorrenciasOS_OrdemServicoId",
                 table: "OcorrenciasOS",
-                column: "IdOrdemServico");
+                column: "OrdemServicoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrdensServico_IdStatusOS",
@@ -206,39 +215,14 @@ namespace ApiCrud.Migrations
                 column: "IdTipo");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StatusOS_OrdemServicoId",
-                table: "StatusOS",
-                column: "OrdemServicoId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TiposServico_IdContrato",
                 table: "TiposServico",
                 column: "IdContrato");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_OcorrenciasOS_OrdensServico_IdOrdemServico",
-                table: "OcorrenciasOS",
-                column: "IdOrdemServico",
-                principalTable: "OrdensServico",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_OrdensServico_StatusOS_IdStatusOS",
-                table: "OrdensServico",
-                column: "IdStatusOS",
-                principalTable: "StatusOS",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_StatusOS_OrdensServico_OrdemServicoId",
-                table: "StatusOS");
-
             migrationBuilder.DropTable(
                 name: "Funcionarios");
 
@@ -255,19 +239,19 @@ namespace ApiCrud.Migrations
                 name: "Ocorrencias");
 
             migrationBuilder.DropTable(
+                name: "OrdensServico");
+
+            migrationBuilder.DropTable(
                 name: "TiposPlano");
 
             migrationBuilder.DropTable(
                 name: "Contratos");
 
             migrationBuilder.DropTable(
-                name: "Clientes");
-
-            migrationBuilder.DropTable(
-                name: "OrdensServico");
-
-            migrationBuilder.DropTable(
                 name: "StatusOS");
+
+            migrationBuilder.DropTable(
+                name: "Clientes");
         }
     }
 }

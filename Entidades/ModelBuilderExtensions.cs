@@ -81,10 +81,20 @@ public static class ModelBuilderExtensions
         {
             entity.HasKey(o => o.Id);
 
-            entity.HasOne(o => o.Ocorrencia)
+            //entity.HasOne(o => o.Ocorrencia)
+            //    .WithMany()
+            //    .HasForeignKey(o => o.IdOcorrencia)
+            //    .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne<OcorrenciaOS>()
                 .WithMany()
-                .HasForeignKey(o => o.IdOcorrencia)
+                .HasForeignKey(o => o.IdOrdemServico)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne<Ocorrencia>()
+               .WithMany()
+               .HasForeignKey(o => o.IdOcorrencia)
+               .OnDelete(DeleteBehavior.Cascade);
         });
     }
 
@@ -97,6 +107,10 @@ public static class ModelBuilderExtensions
             entity.Property(s => s.Descricao)
                 .IsRequired()
                 .HasMaxLength(100);
+
+
+            entity.Property(s => s.Tipo)
+                .HasConversion<int>();
         });
     }
 

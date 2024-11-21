@@ -5,44 +5,49 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace ApiCrud.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241008193248_Initial")]
-    partial class Initial
+    [Migration("20241111204527_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Interfocus.Models.Cliente", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("CpfCnpj")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int?>("IdCidade")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int>("IdContrato")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("IdEstado")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
@@ -53,19 +58,19 @@ namespace ApiCrud.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("IdCliente")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("IdEndereco")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("IdEndereco")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("IdEquipamento")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("IdEquipamento")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("StatusContrato")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -78,7 +83,7 @@ namespace ApiCrud.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -89,14 +94,15 @@ namespace ApiCrud.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
-                    b.Property<bool>("Anexo")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Anexo")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -107,19 +113,22 @@ namespace ApiCrud.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("IdOcorrencia")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("IdOrdemServico")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OrdemServicoId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdOcorrencia");
 
-                    b.HasIndex("IdOrdemServico");
+                    b.HasIndex("OrdemServicoId");
 
                     b.ToTable("OcorrenciasOS");
                 });
@@ -128,28 +137,28 @@ namespace ApiCrud.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("DataAgendamento")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("FuncionarioAbriu")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("IdCliente")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("IdContrato")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("IdFuncionarioFechou")
-                        .HasColumnType("TEXT");
+                    b.Property<Guid>("IdFuncionarioAbriu")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("IdStatusOS")
-                        .HasColumnType("TEXT");
+                    b.Property<Guid?>("IdFuncionarioFechou")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("IdStatusOS")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("IdTipoServico")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -162,20 +171,20 @@ namespace ApiCrud.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("Combo")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("IdTipo")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("Tier")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -186,21 +195,21 @@ namespace ApiCrud.Migrations
 
             modelBuilder.Entity("Interfocus.Models.StatusOS", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(100)");
 
-                    b.Property<Guid>("OrdemServicoId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Tipo")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrdemServicoId");
 
                     b.ToTable("StatusOS");
                 });
@@ -209,11 +218,11 @@ namespace ApiCrud.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -224,15 +233,15 @@ namespace ApiCrud.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<Guid>("IdContrato")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -261,8 +270,8 @@ namespace ApiCrud.Migrations
                         .IsRequired();
 
                     b.HasOne("Interfocus.Models.OrdemServico", "OrdemServico")
-                        .WithMany("OcorrenciasOS")
-                        .HasForeignKey("IdOrdemServico")
+                        .WithMany()
+                        .HasForeignKey("OrdemServicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -293,17 +302,6 @@ namespace ApiCrud.Migrations
                     b.Navigation("TipoPlano");
                 });
 
-            modelBuilder.Entity("Interfocus.Models.StatusOS", b =>
-                {
-                    b.HasOne("Interfocus.Models.OrdemServico", "OrdemServico")
-                        .WithMany()
-                        .HasForeignKey("OrdemServicoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("OrdemServico");
-                });
-
             modelBuilder.Entity("Interfocus.Models.TipoServico", b =>
                 {
                     b.HasOne("Interfocus.Models.Contrato", "Contrato")
@@ -318,11 +316,6 @@ namespace ApiCrud.Migrations
             modelBuilder.Entity("Interfocus.Models.Cliente", b =>
                 {
                     b.Navigation("Contratos");
-                });
-
-            modelBuilder.Entity("Interfocus.Models.OrdemServico", b =>
-                {
-                    b.Navigation("OcorrenciasOS");
                 });
 
             modelBuilder.Entity("Interfocus.Models.TipoPlano", b =>

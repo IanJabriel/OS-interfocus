@@ -1,69 +1,102 @@
-﻿using ApiCrud.Migrations;
-using Interfocus.Models;
+﻿using Interfocus.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using ApiCrud.Data;
 
-[Route("api/[controller]")]
-[ApiController]
-public class OrdemServicoController : ControllerBase
+namespace ApiCrud.Controllers
 {
-    private static List<OrdemServico> ordensServico = new List<OrdemServico>();
-
-    [HttpGet]
-    public ActionResult<IEnumerable<OrdemServico>> Get()
+    [Route("api/[controller]")]
+    [ApiController]
+    public class OrdemServicoController : ControllerBase
     {
-        return Ok(ordensServico);
-    }
+        private readonly AppDbContext _context;
 
-    [HttpGet("{id:guid}")]
-    public ActionResult<OrdemServico> Get(Guid id)
-    {
-        var ordemServico = ordensServico.FirstOrDefault(o => o.Id == id);
-        if (ordemServico == null) return NotFound();
-        return Ok(ordemServico);
-    }
-
-    [HttpPost]
-    public ActionResult Post([FromBody] OrdemServico ordemServico)
-    {
-        if (!ModelState.IsValid)
+        public OrdemServicoController(AppDbContext context)
         {
-            return BadRequest(ModelState);
+            _context = context;
         }
 
-        ordemServico.DataAgendamento = DateTime.UtcNow;
-        ordemServico.StatusOS = new StatusOS
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<OrdemServico>>> Get()
         {
-            Id = ordemServico.IdStatusOS,
-            Descricao = "Aberto",
-            Tipo = StatusOS.StatusTipo.Aberto
-        };
+            var ordensServico = await _context.OrdensServico
+                .Include(os => os.StatusOS)
+                .ToListAsync();
+            return Ok(ordensServico);
+        }
 
-        ordensServico.Add(ordemServico);
-        return CreatedAtAction(nameof(Get), new { id = ordemServico.Id }, ordemServico);
-    }
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<OrdemServico>> Get(Guid id)
+        {
+            var ordemServico = await _context.OrdensServico.FindAsync(id);
 
-    [HttpPut("{id:guid}")]
-    public ActionResult Put(Guid id, [FromBody] OrdemServico ordemServico)
-    {
-        var antigaOrdemServico = ordensServico.FirstOrDefault(o => o.Id == id);
-        if (antigaOrdemServico == null) return NotFound();
+            if (ordemServico == null)
+            {
+                return NotFound();
+            }
 
-        antigaOrdemServico.IdCliente = ordemServico.IdCliente;
-        antigaOrdemServico.IdTipoServico = ordemServico.IdTipoServico;
-        antigaOrdemServico.IdStatusOS = ordemServico.IdStatusOS;
-        antigaOrdemServico.DataAgendamento = ordemServico.DataAgendamento;
+            return Ok(ordemServico);
+        }
 
-        return NoContent();
-    }
+        [HttpPost]
+        public async Task<ActionResult> Post([FromBody] OrdemServico ordemServico)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-    [HttpDelete("{id:guid}")]
-    public ActionResult Delete(Guid id)
-    {
-        var ordemServico = ordensServico.FirstOrDefault(o => o.Id == id);
-        if (ordemServico == null) return NotFound();
+            ordemServico.DataAgendamento = DateTime.UtcNow;
+            ordemServico.StatusOS = new StatusOS
+            {
+                Tipo = StatusOS.StatusTipo.Aberto,
+                Descricao = "Aberto",
+            };
 
-        ordensServico.Remove(ordemServico);
-        return NoContent();
+            ordemServico.IdStatusOS = (int)ordemServico.StatusOS.Tipo;
+
+            _context.OrdensServico.Add(ordemServico);
+            await _context.SaveChangesAsync(); 
+
+            return CreatedAtAction(nameof(Get), new { id = ordemServico.Id }, ordemServico);
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<ActionResult> Put(Guid id, [FromBody] OrdemServico ordemServico)
+        {
+            var ordemExistente = await _context.OrdensServico.FindAsync(id);
+            if (ordemExistente == null)
+            {
+                return NotFound();
+            }
+
+            ordemExistente.IdCliente = ordemServico.IdCliente;
+            ordemExistente.IdTipoServico = ordemServico.IdTipoServico;
+            ordemExistente.IdStatusOS = ordemServico.IdStatusOS;
+            ordemExistente.DataAgendamento = ordemServico.DataAgendamento;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult> Delete(Guid id)
+        {
+            var ordemServico = await _context.OrdensServico.FindAsync(id);
+            if (ordemServico == null)
+            {
+                return NotFound();
+            }
+
+            _context.OrdensServico.Remove(ordemServico);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
