@@ -32,7 +32,18 @@ namespace ApiCrud.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<OrdemServico>> Get(Guid id)
         {
+
             var ordemServico = await _context.OrdensServico.FindAsync(id);
+
+            Id = ordemServico.IdStatusOS,
+            Descricao = "Aberto",
+
+            //Tipo = StatusOS.StatusTipo.Aberto
+        };
+        ordemServico.IdFuncionarioFechou = null;
+            Tipo = StatusOS.StatusTipo.Aberto
+        };
+
 
             if (ordemServico == null)
             {

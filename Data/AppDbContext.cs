@@ -30,6 +30,10 @@ namespace ApiCrud.Data
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
             optionsBuilder.UseNpgsql(connectionString);
 
+
+            /*optionsBuilder.UseSqlite("Data Source=Banco.sqlite")*/
+            optionsBuilder.UseNpgsql("Host=localhost;Database=interfocus;Username=postgres;Password=qwerty");
+
             base.OnConfiguring(optionsBuilder);
         }
 
