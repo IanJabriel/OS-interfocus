@@ -1,8 +1,9 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Interfocus.Models
 {
-    public class OrdemServico                           
+    public class OrdemServico
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public Guid IdTipoServico { get; set; }
@@ -15,11 +16,7 @@ namespace Interfocus.Models
         public Guid IdFuncionarioAbriu { get; set; }
         public Guid? IdFuncionarioFechou { get; set; }
 
-
         public List<OcorrenciaOS> OcorrenciasOS { get; set; } = new List<OcorrenciaOS>();
-
-        //public ICollection<OcorrenciaOS> OcorrenciasOS { get; set; } = new List<OcorrenciaOS>();
-        public StatusOS StatusOS { get; set; }
 
         public OrdemServico(Guid idTipoServico, DateTime dataAgendamento, Guid idContrato, Guid idCliente, Guid idFuncionarioAbriu, Guid? idFuncionarioFechou)
         {
@@ -28,13 +25,11 @@ namespace Interfocus.Models
             IdContrato = idContrato;
             IdCliente = idCliente;
 
-            IdStatusOS = (int)StatusOS.StatusTipo.Aberto;
-
             StatusOS = new StatusOS
             {
-                Tipo = StatusOS.StatusTipo.Aberto, 
                 Descricao = "Aberto"
             };
+            IdStatusOS = StatusOS.Id;
 
             IdFuncionarioAbriu = idFuncionarioAbriu;
             IdFuncionarioFechou = idFuncionarioFechou;
