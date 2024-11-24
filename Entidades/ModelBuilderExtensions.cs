@@ -3,64 +3,6 @@ using Interfocus.Models;
 
 public static class ModelBuilderExtensions
 {
-    public static void ConfigureCliente(this ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Cliente>(entity =>
-        {
-            entity.HasKey(c => c.Id);
-
-            entity.Property(c => c.Nome)
-                .IsRequired()
-                .HasMaxLength(100);
-
-            entity.HasMany(c => c.Contratos)
-                .WithOne(c => c.Cliente)
-                .HasForeignKey(c => c.IdCliente)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-    }
-
-    public static void ConfigureContrato(this ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Contrato>(entity =>
-        {
-            entity.HasKey(c => c.Id);
-
-            entity.Property(c => c.StatusContrato)
-                .IsRequired();
-        });
-    }
-
-    public static void ConfigurePlano(this ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Plano>(entity =>
-        {
-            entity.HasKey(p => p.Id);
-
-            entity.Property(p => p.Descricao)
-                .IsRequired();
-
-            entity.Property(p => p.Combo)
-                .IsRequired();
-
-            entity.HasOne(p => p.TipoPlano)
-                .WithMany(t => t.Planos)
-                .HasForeignKey(p => p.IdTipo)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-    }
-
-    public static void ConfigureTipoPlano(this ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<TipoPlano>(entity =>
-        {
-            entity.HasKey(t => t.Id);
-
-            entity.Property(t => t.Descricao)
-                .IsRequired();
-        });
-    }
-
     public static void ConfigureOcorrencia(this ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Ocorrencia>(entity =>
@@ -113,15 +55,6 @@ public static class ModelBuilderExtensions
                 .HasConversion<int>();
         });
     }
-
-    public static void ConfigureFuncionario(this ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Funcionario>(entity =>
-        {
-            entity.HasKey(f => f.Id);
-        });
-    }
-
     public static void ConfigureTipoServico(this ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TipoServico>(entity =>
@@ -138,7 +71,6 @@ public static class ModelBuilderExtensions
                 .OnDelete(DeleteBehavior.Cascade);
         });
     }
-
     public static void ConfigureOrdemServico(this ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<OrdemServico>(entity =>

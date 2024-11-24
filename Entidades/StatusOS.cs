@@ -5,7 +5,9 @@ namespace Interfocus.Models
 {
     public class StatusOS
     {
+        [JsonPropertyName("id")]
         public int Id { get; set; }
+        [JsonPropertyName("descricao")]
         public string Descricao { get; set; }
         public StatusTipo Tipo { get; set; }
 
