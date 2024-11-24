@@ -1,4 +1,6 @@
-﻿namespace Interfocus.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Interfocus.Models
 {
     public class OrdemServico
     {
