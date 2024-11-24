@@ -7,8 +7,6 @@ namespace Interfocus.Models
         public Guid Id { get; set; }
         public string Descricao { get; set; }
         public Guid IdContrato { get; set; }
-
-        public Contrato Contrato { get; set; }
         
         public TipoServico(string descricao)
         {

@@ -127,10 +127,9 @@ public static class ModelBuilderExtensions
                 .IsRequired()
                 .HasMaxLength(100);
 
-            entity.HasOne(ts => ts.Contrato)
-                .WithMany()
-                .HasForeignKey(ts => ts.IdContrato)
-                .OnDelete(DeleteBehavior.Cascade);
+         
+            entity.Property(ts => ts.IdContrato)
+                .IsRequired(false);
         });
     }
 

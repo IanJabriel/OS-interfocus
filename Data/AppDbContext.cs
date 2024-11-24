@@ -14,14 +14,14 @@ namespace ApiCrud.Data
             _configuration = configuration;
         }
 
-        public DbSet<Cliente> Clientes { get; set; }
-        public DbSet<Contrato> Contratos { get; set; }
-        public DbSet<Plano> Planos { get; set; }
-        public DbSet<TipoPlano> TiposPlano { get; set; }
+        //public DbSet<Cliente> Clientes { get; set; }
+        //public DbSet<Contrato> Contratos { get; set; }
+        //public DbSet<Plano> Planos { get; set; }
+        //public DbSet<TipoPlano> TiposPlano { get; set; }
         public DbSet<Ocorrencia> Ocorrencias { get; set; }
         public DbSet<OcorrenciaOS> OcorrenciasOS { get; set; }
         public DbSet<StatusOS> StatusOS { get; set; }
-        public DbSet<Funcionario> Funcionarios { get; set; }
+        /*public DbSet<Funcionario> Funcionarios { get; set; }*/
         public DbSet<TipoServico> TiposServico { get; set; }
         public DbSet<OrdemServico> OrdensServico { get; set; }
 

@@ -20,13 +20,11 @@ namespace ApiCrud.Controllers
         public async Task<ActionResult<IEnumerable<object>>> Get()
         {
             var tipoServicos = await _context.TiposServico
-                .Include(t => t.Contrato)
                 .Select(t => new
                 {
                     t.Id,
                     t.Descricao,
-                    t.IdContrato,
-                    ContratoDescricao = t.Contrato.StatusContrato
+                    t.IdContrato
                 })
                 .ToListAsync();
 
@@ -37,7 +35,6 @@ namespace ApiCrud.Controllers
         public async Task<ActionResult<object>> Get(Guid id)
         {
             var tipoServico = await _context.TiposServico
-                .Include(t => t.Contrato)
                 .Where(t => t.Id == id)
                 .FirstOrDefaultAsync();
 
@@ -48,8 +45,7 @@ namespace ApiCrud.Controllers
             {
                 tipoServico.Id,
                 tipoServico.Descricao,
-                tipoServico.IdContrato,
-                tipoServico.Contrato.StatusContrato
+                tipoServico.IdContrato
             };
 
             return Ok(response);
@@ -116,7 +112,10 @@ namespace ApiCrud.Controllers
         public async Task<ActionResult> Delete(Guid id)
         {
             var tipoServico = await _context.TiposServico.FindAsync(id);
-            if (tipoServico == null) return NotFound();
+            if (tipoServico == null)
+            {
+                return NotFound();
+            }
 
             _context.TiposServico.Remove(tipoServico);
             await _context.SaveChangesAsync();
