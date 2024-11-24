@@ -105,12 +105,7 @@ public static class ModelBuilderExtensions
             entity.HasKey(s => s.Id);
 
             entity.Property(s => s.Descricao)
-                .IsRequired()
-                .HasMaxLength(100);
-
-
-            entity.Property(s => s.Tipo)
-                .HasConversion<int>();
+                .IsRequired();
         });
     }
 
@@ -148,12 +143,12 @@ public static class ModelBuilderExtensions
             entity.Property(o => o.DataAgendamento)
                 .IsRequired();
 
-            entity.HasOne(o => o.StatusOS)
-                .WithMany()
-                .HasForeignKey(o => o.IdStatusOS)
-                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(o => o.StatusOS)  
+                .WithMany()                  
+                .HasForeignKey(o => o.IdStatusOS) 
+                .OnDelete(DeleteBehavior.Cascade); 
 
-            entity.Property(o => o.IdFuncionarioFechou) .IsRequired(false);
+            entity.Property(o => o.IdFuncionarioFechou).IsRequired(false);
         });
     }
 }
