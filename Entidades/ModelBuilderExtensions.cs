@@ -128,7 +128,7 @@ public static class ModelBuilderExtensions
                 .HasMaxLength(100);
 
          
-            entity.Property(ts => ts.IdContrato)
+            entity.Property(ts => ts.StatusCt)
                 .IsRequired(false);
         });
     }

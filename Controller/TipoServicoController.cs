@@ -24,7 +24,7 @@ namespace ApiCrud.Controllers
                 {
                     t.Id,
                     t.Descricao,
-                    t.IdContrato
+                    t.StatusCt
                 })
                 .ToListAsync();
 
@@ -45,7 +45,7 @@ namespace ApiCrud.Controllers
             {
                 tipoServico.Id,
                 tipoServico.Descricao,
-                tipoServico.IdContrato
+                tipoServico.StatusCt
             };
 
             return Ok(response);
@@ -66,7 +66,7 @@ namespace ApiCrud.Controllers
             {
                 tipoServico.Id,
                 tipoServico.Descricao,
-                tipoServico.IdContrato
+                tipoServico.StatusCt
             };
 
             return CreatedAtAction(nameof(Get), new { id = tipoServico.Id }, response);
@@ -87,7 +87,7 @@ namespace ApiCrud.Controllers
             }
 
             oldTipoServico.Descricao = tipoServico.Descricao;
-            oldTipoServico.IdContrato = tipoServico.IdContrato;
+            oldTipoServico.StatusCt = tipoServico.StatusCt;
 
             try
             {
@@ -102,7 +102,7 @@ namespace ApiCrud.Controllers
             {
                 oldTipoServico.Id,
                 oldTipoServico.Descricao,
-                oldTipoServico.IdContrato
+                oldTipoServico.StatusCt
             };
 
             return Ok(response);
