@@ -1,11 +1,8 @@
 ﻿using Interfocus.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ApiCrud.Data;
+
 
 namespace ApiCrud.Controllers
 {
@@ -20,6 +17,7 @@ namespace ApiCrud.Controllers
             _context = context;
         }
 
+        // GET: api/ordemservico
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrdemServico>>> Get()
         {
@@ -32,22 +30,13 @@ namespace ApiCrud.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<OrdemServico>> Get(Guid id)
         {
-
-            var ordemServico = await _context.OrdensServico.FindAsync(id);
-
-            Id = ordemServico.IdStatusOS,
-            Descricao = "Aberto",
-
-            //Tipo = StatusOS.StatusTipo.Aberto
-        };
-        ordemServico.IdFuncionarioFechou = null;
-            Tipo = StatusOS.StatusTipo.Aberto
-        };
-
+            var ordemServico = await _context.OrdensServico
+                .Include(os => os.StatusOS)  
+                .FirstOrDefaultAsync(os => os.Id == id);
 
             if (ordemServico == null)
             {
-                return NotFound();
+                return NotFound();  
             }
 
             return Ok(ordemServico);
@@ -62,16 +51,16 @@ namespace ApiCrud.Controllers
             }
 
             ordemServico.DataAgendamento = DateTime.UtcNow;
+
             ordemServico.StatusOS = new StatusOS
             {
-                Tipo = StatusOS.StatusTipo.Aberto,
-                Descricao = "Aberto",
+                Descricao = "Aberto"
             };
 
-            ordemServico.IdStatusOS = (int)ordemServico.StatusOS.Tipo;
+            ordemServico.IdStatusOS = ordemServico.StatusOS.Id;
 
             _context.OrdensServico.Add(ordemServico);
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(Get), new { id = ordemServico.Id }, ordemServico);
         }
@@ -84,6 +73,7 @@ namespace ApiCrud.Controllers
             {
                 return NotFound();
             }
+
 
             ordemExistente.IdCliente = ordemServico.IdCliente;
             ordemExistente.IdTipoServico = ordemServico.IdTipoServico;
