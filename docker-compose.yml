@@ -1,52 +1,24 @@
-﻿services:
-  db:
-    image: postgres:latest
-    environment:
-      POSTGRES_DB: radius
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - services
+﻿version: '3.8'
 
-  radiusauth:
-    image: registry.gitlab.com/equipe-robo/radiusauth:latest
-    ports:
-      - "53505:8080"
+services:
+  os_api:
+    image: url_imagem_gitlab 
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
-      - ASPNETCORE_HTTP_PORTS=8080
-    depends_on:
-      - db
+      - ASPNETCORE_HTTP_PORTS=8080 
     networks:
-      - ingress-network
-      - services
+      - ingress-network  
+      - services  
     deploy:
       labels:
-        caddy: radiuspro.labs.unimar.br
-        caddy.reverse_proxy: "{{upstreams 8080}}"
+        caddy: nome_da_sua_aplicacao.labs.unimar.br 
+        caddy.reverse_proxy: "{{upstreams 8080}}"  
       resources:
         limits:
           cpus: '0.25'
-          memory: 512M
-
-  freeradius:
-    image: registry.gitlab.com/equipe-robo/freeradius:latest
-    depends_on:
-      - radiusauth
-    environment:
-      DB_HOST: db
-      DB_USER: postgres
-      DB_PASS: postgres
-      DB_NAME: radius
-    networks:
-      - services
-
-volumes:
-  postgres_data:
+          memory: 512M  
 
 networks:
-  services:
+  services: {}
   ingress-network:
-    external: true
+    external: true 
