@@ -5,7 +5,7 @@
 namespace ApiCrud.Migrations
 {
     /// <inheritdoc />
-    public partial class inicial_psql : Migration
+    public partial class ConfigureOcorrenciaOS : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

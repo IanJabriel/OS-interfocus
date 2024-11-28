@@ -32,7 +32,7 @@ namespace ApiCrud.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<object>> Get(Guid id)
+        public async Task<ActionResult<object>> Get(int id)
         {
             var tipoServico = await _context.TiposServico
                 .Where(t => t.Id == id)
@@ -73,7 +73,7 @@ namespace ApiCrud.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult> Put(Guid id, [FromBody] TipoServico tipoServico)
+        public async Task<ActionResult> Put(int id, [FromBody] TipoServico tipoServico)
         {
             if (id != tipoServico.Id)
             {

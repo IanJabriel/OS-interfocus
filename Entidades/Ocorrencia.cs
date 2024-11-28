@@ -6,7 +6,7 @@ namespace Interfocus.Models
     public class Ocorrencia
     {
         [JsonPropertyName("id")]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
         [JsonPropertyName("descricao")]
         public string Descricao { get; set; }
         [JsonPropertyName("anexo")]

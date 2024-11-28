@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApiCrud.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241111204527_Inicial")]
-    partial class Inicial
+    [Migration("20241128020427_arrumandoFK")]
+    partial class arrumandoFK
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,9 +27,11 @@ namespace ApiCrud.Migrations
 
             modelBuilder.Entity("Interfocus.Models.Cliente", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CpfCnpj")
                         .IsRequired()
@@ -51,23 +53,25 @@ namespace ApiCrud.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clientes");
+                    b.ToTable("Cliente");
                 });
 
             modelBuilder.Entity("Interfocus.Models.Contrato", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("IdCliente")
-                        .HasColumnType("uuid");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid>("IdEndereco")
-                        .HasColumnType("uuid");
+                    b.Property<int>("IdCliente")
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("IdEquipamento")
-                        .HasColumnType("uuid");
+                    b.Property<int>("IdEndereco")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("IdEquipamento")
+                        .HasColumnType("integer");
 
                     b.Property<int>("StatusContrato")
                         .HasColumnType("integer");
@@ -76,33 +80,40 @@ namespace ApiCrud.Migrations
 
                     b.HasIndex("IdCliente");
 
-                    b.ToTable("Contratos");
+                    b.ToTable("Contrato");
                 });
 
             modelBuilder.Entity("Interfocus.Models.Funcionario", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.HasKey("Id");
 
-                    b.ToTable("Funcionarios");
+                    b.ToTable("Funcionario");
                 });
 
             modelBuilder.Entity("Interfocus.Models.Ocorrencia", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Anexo")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "anexo");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "descricao");
 
                     b.HasKey("Id");
 
@@ -111,54 +122,66 @@ namespace ApiCrud.Migrations
 
             modelBuilder.Entity("Interfocus.Models.OcorrenciaOS", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "id");
 
-                    b.Property<Guid>("IdOcorrencia")
-                        .HasColumnType("uuid");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid>("IdOrdemServico")
-                        .HasColumnType("uuid");
+                    b.Property<int>("IdOcorrencia")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "id_ocorrencia");
 
-                    b.Property<Guid>("OrdemServicoId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("IdOrdemServico")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "id_os");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdOcorrencia");
 
-                    b.HasIndex("OrdemServicoId");
+                    b.HasIndex("IdOrdemServico");
 
-                    b.ToTable("OcorrenciasOS");
+                    b.ToTable("OcorrenciasOS", (string)null);
                 });
 
             modelBuilder.Entity("Interfocus.Models.OrdemServico", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DataAgendamento")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasAnnotation("Relational:JsonPropertyName", "data_agendamento");
 
-                    b.Property<Guid>("IdCliente")
-                        .HasColumnType("uuid");
+                    b.Property<int>("IdCliente")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "id_cliente");
 
-                    b.Property<Guid>("IdContrato")
-                        .HasColumnType("uuid");
+                    b.Property<int>("IdContrato")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "id_contrato");
 
-                    b.Property<Guid>("IdFuncionarioAbriu")
-                        .HasColumnType("uuid");
+                    b.Property<int>("IdFuncionarioAbriu")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "funcionario_abriu");
 
-                    b.Property<Guid?>("IdFuncionarioFechou")
-                        .HasColumnType("uuid");
+                    b.Property<int?>("IdFuncionarioFechou")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "funcionario_fechou");
 
                     b.Property<int>("IdStatusOS")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "id_status_os");
 
-                    b.Property<Guid>("IdTipoServico")
-                        .HasColumnType("uuid");
+                    b.Property<int>("IdTipoServico")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "id_tipo_servico");
 
                     b.HasKey("Id");
 
@@ -169,9 +192,11 @@ namespace ApiCrud.Migrations
 
             modelBuilder.Entity("Interfocus.Models.Plano", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Combo")
                         .HasColumnType("boolean");
@@ -180,20 +205,56 @@ namespace ApiCrud.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("IdTipo")
-                        .HasColumnType("uuid");
+                    b.Property<int>("IdTipo")
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("Tier")
-                        .HasColumnType("uuid");
+                    b.Property<int>("Tier")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdTipo");
 
-                    b.ToTable("Planos");
+                    b.ToTable("Plano");
                 });
 
             modelBuilder.Entity("Interfocus.Models.StatusOS", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasAnnotation("Relational:JsonPropertyName", "descricao");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StatusOS");
+                });
+
+            modelBuilder.Entity("Interfocus.Models.TipoPlano", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TipoPlano");
+                });
+
+            modelBuilder.Entity("Interfocus.Models.TipoServico", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -206,46 +267,15 @@ namespace ApiCrud.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int>("Tipo")
-                        .HasColumnType("integer");
+                    b.Property<int>("MudancaContrato")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "mudanca_contrato");
+
+                    b.Property<int>("StatusCt")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Relational:JsonPropertyName", "status_ct");
 
                     b.HasKey("Id");
-
-                    b.ToTable("StatusOS");
-                });
-
-            modelBuilder.Entity("Interfocus.Models.TipoPlano", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TiposPlano");
-                });
-
-            modelBuilder.Entity("Interfocus.Models.TipoServico", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<Guid>("IdContrato")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdContrato");
 
                     b.ToTable("TiposServico");
                 });
@@ -263,32 +293,26 @@ namespace ApiCrud.Migrations
 
             modelBuilder.Entity("Interfocus.Models.OcorrenciaOS", b =>
                 {
-                    b.HasOne("Interfocus.Models.Ocorrencia", "Ocorrencia")
+                    b.HasOne("Interfocus.Models.Ocorrencia", null)
                         .WithMany()
                         .HasForeignKey("IdOcorrencia")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Interfocus.Models.OrdemServico", "OrdemServico")
+                    b.HasOne("Interfocus.Models.OrdemServico", null)
                         .WithMany()
-                        .HasForeignKey("OrdemServicoId")
+                        .HasForeignKey("IdOrdemServico")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Ocorrencia");
-
-                    b.Navigation("OrdemServico");
                 });
 
             modelBuilder.Entity("Interfocus.Models.OrdemServico", b =>
                 {
-                    b.HasOne("Interfocus.Models.StatusOS", "StatusOS")
+                    b.HasOne("Interfocus.Models.StatusOS", null)
                         .WithMany()
                         .HasForeignKey("IdStatusOS")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("StatusOS");
                 });
 
             modelBuilder.Entity("Interfocus.Models.Plano", b =>
@@ -300,17 +324,6 @@ namespace ApiCrud.Migrations
                         .IsRequired();
 
                     b.Navigation("TipoPlano");
-                });
-
-            modelBuilder.Entity("Interfocus.Models.TipoServico", b =>
-                {
-                    b.HasOne("Interfocus.Models.Contrato", "Contrato")
-                        .WithMany()
-                        .HasForeignKey("IdContrato")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contrato");
                 });
 
             modelBuilder.Entity("Interfocus.Models.Cliente", b =>

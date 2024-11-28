@@ -6,39 +6,38 @@ namespace Interfocus.Models
     public class OrdemServico
     {
         [JsonPropertyName("id")]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
+
         [JsonPropertyName("id_tipo_servico")]
-        public Guid IdTipoServico { get; set; }
+        public int IdTipoServico { get; set; }
+
         [JsonPropertyName("data_agendamento")]
         public DateTime DataAgendamento { get; set; }
+
         [JsonPropertyName("id_contrato")]
-        public Guid IdContrato { get; set; }
+        public int IdContrato { get; set; }
+
         [JsonPropertyName("id_cliente")]
-        public Guid IdCliente { get; set; }
-        [JsonPropertyName("status_os")]
+        public int IdCliente { get; set; }
+
+        [JsonPropertyName("id_status_os")]
         public int IdStatusOS { get; set; }
 
-        public StatusOS StatusOS { get; set; }
         [JsonPropertyName("funcionario_abriu")]
-        public Guid IdFuncionarioAbriu { get; set; }
-        [JsonPropertyName("funcionario_fechou")]
-        public Guid? IdFuncionarioFechou { get; set; }
+        public int IdFuncionarioAbriu { get; set; }
 
-        public OrdemServico(Guid idTipoServico, DateTime dataAgendamento, Guid idContrato, Guid idCliente, Guid idFuncionarioAbriu, Guid? idFuncionarioFechou)
+        [JsonPropertyName("funcionario_fechou")]
+        public int? IdFuncionarioFechou { get; set; }
+
+        public OrdemServico(int idTipoServico, DateTime dataAgendamento, int idContrato, int idCliente, int idFuncionarioAbriu, int? idFuncionarioFechou, int idStatusOS)
         {
             IdTipoServico = idTipoServico;
             DataAgendamento = dataAgendamento;
             IdContrato = idContrato;
             IdCliente = idCliente;
-
-            StatusOS = new StatusOS
-            {
-                Descricao = "Aberto"
-            };
-            IdStatusOS = StatusOS.Id;
-
             IdFuncionarioAbriu = idFuncionarioAbriu;
             IdFuncionarioFechou = idFuncionarioFechou;
+            IdStatusOS = idStatusOS;
         }
 
         public OrdemServico() { }

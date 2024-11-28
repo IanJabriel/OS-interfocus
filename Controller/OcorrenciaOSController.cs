@@ -1,13 +1,13 @@
-﻿using ApiCrud.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using Interfocus.Models;
-using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.EntityFrameworkCore;
+using ApiCrud.Data;
 
-
-namespace ApiCrud.Controllers
+namespace Interfocus.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class OcorrenciaOSController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -17,77 +17,60 @@ namespace ApiCrud.Controllers
             _context = context;
         }
 
+        // GET: api/OcorrenciaOS
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> Get()
+        public async Task<IActionResult> GetAll()
         {
-            var ocorrenciasOS = await _context.OcorrenciasOS
-                .Select(o => new
-                {
-                    o.Id,
-                    o.IdOrdemServico,
-                    o.IdOcorrencia
-                })
-                .ToListAsync();
-
-            return Ok(ocorrenciasOS);
+            var ocorrencias = await _context.OcorrenciasOS.ToListAsync();
+            return Ok(ocorrencias);
         }
 
-        [HttpGet("{id:guid}")]
-        public async Task<ActionResult<object>> Get(Guid id)
+        // GET: api/OcorrenciaOS/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            var ocorrenciaOS = await _context.OcorrenciasOS
-                .Where(o => o.Id == id)
-                .FirstOrDefaultAsync();
+            var ocorrencia = await _context.OcorrenciasOS.FindAsync(id);
 
-            if (ocorrenciaOS == null) return NotFound();
-
-            var response = new
-            {
-                ocorrenciaOS.Id,
-                ocorrenciaOS.IdOrdemServico,
-                ocorrenciaOS.IdOcorrencia
-            };
-
-            return Ok(response);
+            if (ocorrencia == null) return NotFound();
+            return Ok(ocorrencia);
         }
 
         [HttpPost]
-        public async Task<ActionResult<object>> Post([FromBody] OcorrenciaOS ocorrenciaOS)
+        public ActionResult Post([FromBody] OcorrenciaOS request)
         {
-            if (ocorrenciaOS == null)
+            var ordemServico = _context.OrdensServico.SingleOrDefault(os => os.Id == request.IdOrdemServico);
+            if (ordemServico == null)
             {
-                return BadRequest("OcorrenciaOS não pode ser nulo.");
+                return NotFound("Ordem de Serviço não encontrada.");
             }
 
-            _context.OcorrenciasOS.Add(ocorrenciaOS);
-            await _context.SaveChangesAsync();
-
-            var response = new
+            var ocorrencia = _context.Ocorrencias.SingleOrDefault(o => o.Id == request.IdOcorrencia);
+            if (ocorrencia == null)
             {
-                ocorrenciaOS.Id,
-                ocorrenciaOS.IdOrdemServico,
-                ocorrenciaOS.IdOcorrencia
+                return NotFound("Ocorrência não encontrada.");
+            }
+
+            var ocorrenciaOS = new OcorrenciaOS
+            {
+                IdOrdemServico = request.IdOrdemServico,
+                IdOcorrencia = request.IdOcorrencia
             };
 
-            return CreatedAtAction(nameof(Get), new { id = ocorrenciaOS.Id }, response);
+            _context.OcorrenciasOS.Add(ocorrenciaOS);
+            _context.SaveChanges();
+
+            return Ok("Associação criada com sucesso.");
         }
 
-        [HttpPut("{id:guid}")]
-        public async Task<ActionResult> Put(Guid id, [FromBody] OcorrenciaOS ocorrenciaOS)
+
+
+        // PUT: api/OcorrenciaOS/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, OcorrenciaOS ocorrencia)
         {
-            if (id != ocorrenciaOS.Id)
-            {
-                return BadRequest("ID da URL e do corpo da requisição não coincidem.");
-            }
+            if (id != ocorrencia.Id) return BadRequest();
 
-            var oldOcorrenciaOS = await _context.OcorrenciasOS.FindAsync(id);
-            if (oldOcorrenciaOS == null)
-            {
-                return NotFound();
-            }
-
-            oldOcorrenciaOS.IdOrdemServico = ocorrenciaOS.IdOrdemServico;
-            oldOcorrenciaOS.IdOcorrencia = ocorrenciaOS.IdOcorrencia;
+            _context.Entry(ocorrencia).State = EntityState.Modified;
 
             try
             {
@@ -95,28 +78,22 @@ namespace ApiCrud.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                return StatusCode(500, "Erro ao atualizar a ocorrência no banco de dados.");
+                if (!_context.OcorrenciasOS.Any(e => e.Id == id)) return NotFound();
+                throw;
             }
 
-            var response = new
-            {
-                oldOcorrenciaOS.Id,
-                oldOcorrenciaOS.IdOrdemServico,
-                oldOcorrenciaOS.IdOcorrencia
-            };
-
-            return Ok(response);
+            return NoContent();
         }
 
-        [HttpDelete("{id:guid}")]
-        public async Task<ActionResult> Delete(Guid id)
+        // DELETE: api/OcorrenciaOS/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            var ocorrenciaOS = await _context.OcorrenciasOS.FindAsync(id);
-            if (ocorrenciaOS == null) return NotFound();
+            var ocorrencia = await _context.OcorrenciasOS.FindAsync(id);
+            if (ocorrencia == null) return NotFound();
 
-            _context.OcorrenciasOS.Remove(ocorrenciaOS);
+            _context.OcorrenciasOS.Remove(ocorrencia);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
     }
