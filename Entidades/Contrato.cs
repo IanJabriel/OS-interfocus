@@ -4,17 +4,17 @@ namespace Interfocus.Models
 {
     public class Contrato
     {
-        public Guid Id { get; private set; }
-        public Guid IdCliente { get; set; }
-        public Guid IdEndereco { get; set; }
-        public Guid IdEquipamento { get; set; }
+        public int Id { get; private set; }
+        public int IdCliente { get; set; }
+        public int IdEndereco { get; set; }
+        public int IdEquipamento { get; set; }
         public int StatusContrato { get; set; }
 
         public Cliente Cliente { get; set; }
 
-        public Contrato(Guid idCliente, Guid idEndereco, Guid idEquipamento, int statusContrato)
+        public Contrato(int idCliente, int idEndereco, int idEquipamento, int statusContrato)
         {
-            Id = Guid.NewGuid();
+            Id = Id;
             IdCliente = idCliente;
             IdEndereco = idEndereco;
             IdEquipamento = idEquipamento;

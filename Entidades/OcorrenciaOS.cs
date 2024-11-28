@@ -5,13 +5,11 @@ namespace Interfocus.Models
 {
     public class OcorrenciaOS
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid IdOrdemServico { get; set; }
-        public Guid IdOcorrencia { get; set; }
-
-        [JsonIgnore]
-        public OrdemServico OrdemServico { get; set; }
-        [JsonIgnore]
-        public Ocorrencia Ocorrencia { get; set; }
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+        [JsonPropertyName("id_os")]
+        public int IdOrdemServico { get; set; }
+        [JsonPropertyName("id_ocorrencia")]
+        public int IdOcorrencia { get; set; }
     }
 }

@@ -72,6 +72,9 @@ public static class ModelBuilderExtensions
 
             entity.Property(o => o.Anexo)
                 .IsRequired();
+
+            entity.Property(o => o.Id)
+                .ValueGeneratedOnAdd();
         });
     }
 
@@ -81,22 +84,26 @@ public static class ModelBuilderExtensions
         {
             entity.HasKey(o => o.Id);
 
-            //entity.HasOne(o => o.Ocorrencia)
-            //    .WithMany()
-            //    .HasForeignKey(o => o.IdOcorrencia)
-            //    .OnDelete(DeleteBehavior.Cascade);
+            entity.Property(o => o.Id)
+                .ValueGeneratedOnAdd();
 
-            entity.HasOne<OcorrenciaOS>()
+            entity.HasOne<OrdemServico>()
                 .WithMany()
                 .HasForeignKey(o => o.IdOrdemServico)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
 
             entity.HasOne<Ocorrencia>()
-               .WithMany()
-               .HasForeignKey(o => o.IdOcorrencia)
-               .OnDelete(DeleteBehavior.Cascade);
+                .WithMany()
+                .HasForeignKey(o => o.IdOcorrencia)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
+
+            entity.ToTable("OcorrenciasOS");
         });
     }
+
+
 
     public static void ConfigureStatusOS(this ModelBuilder modelBuilder)
     {
@@ -127,10 +134,12 @@ public static class ModelBuilderExtensions
                 .IsRequired()
                 .HasMaxLength(100);
 
-            entity.HasOne(ts => ts.Contrato)
-                .WithMany()
-                .HasForeignKey(ts => ts.IdContrato)
-                .OnDelete(DeleteBehavior.Cascade);
+         
+            entity.Property(ts => ts.StatusCt)
+                .IsRequired();
+
+            entity.Property(ts => ts.Id)
+                .ValueGeneratedOnAdd(); 
         });
     }
 
@@ -143,10 +152,10 @@ public static class ModelBuilderExtensions
             entity.Property(o => o.DataAgendamento)
                 .IsRequired();
 
-            entity.HasOne(o => o.StatusOS)  
-                .WithMany()                  
-                .HasForeignKey(o => o.IdStatusOS) 
-                .OnDelete(DeleteBehavior.Cascade); 
+            entity.HasOne<StatusOS>()
+                .WithMany()
+                .HasForeignKey(o => o.IdStatusOS)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.Property(o => o.IdFuncionarioFechou).IsRequired(false);
         });

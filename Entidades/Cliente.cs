@@ -5,7 +5,7 @@ namespace Interfocus.Models
 {
     public class Cliente
     {
-        public Guid Id { get; private set; }
+        public int Id { get; private set; }
         public string Nome { get; set; }
         public int IdContrato { get; set; } 
         public string CpfCnpj { get; set; }

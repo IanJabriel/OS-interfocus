@@ -20,13 +20,11 @@ namespace ApiCrud.Controllers
         public async Task<ActionResult<IEnumerable<object>>> Get()
         {
             var tipoServicos = await _context.TiposServico
-                .Include(t => t.Contrato)
                 .Select(t => new
                 {
                     t.Id,
                     t.Descricao,
-                    t.IdContrato,
-                    ContratoDescricao = t.Contrato.StatusContrato
+                    t.StatusCt
                 })
                 .ToListAsync();
 
@@ -34,10 +32,9 @@ namespace ApiCrud.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<object>> Get(Guid id)
+        public async Task<ActionResult<object>> Get(int id)
         {
             var tipoServico = await _context.TiposServico
-                .Include(t => t.Contrato)
                 .Where(t => t.Id == id)
                 .FirstOrDefaultAsync();
 
@@ -48,8 +45,7 @@ namespace ApiCrud.Controllers
             {
                 tipoServico.Id,
                 tipoServico.Descricao,
-                tipoServico.IdContrato,
-                tipoServico.Contrato.StatusContrato
+                tipoServico.StatusCt
             };
 
             return Ok(response);
@@ -70,14 +66,14 @@ namespace ApiCrud.Controllers
             {
                 tipoServico.Id,
                 tipoServico.Descricao,
-                tipoServico.IdContrato
+                tipoServico.StatusCt
             };
 
             return CreatedAtAction(nameof(Get), new { id = tipoServico.Id }, response);
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult> Put(Guid id, [FromBody] TipoServico tipoServico)
+        public async Task<ActionResult> Put(int id, [FromBody] TipoServico tipoServico)
         {
             if (id != tipoServico.Id)
             {
@@ -91,7 +87,7 @@ namespace ApiCrud.Controllers
             }
 
             oldTipoServico.Descricao = tipoServico.Descricao;
-            oldTipoServico.IdContrato = tipoServico.IdContrato;
+            oldTipoServico.StatusCt = tipoServico.StatusCt;
 
             try
             {
@@ -106,7 +102,7 @@ namespace ApiCrud.Controllers
             {
                 oldTipoServico.Id,
                 oldTipoServico.Descricao,
-                oldTipoServico.IdContrato
+                oldTipoServico.StatusCt
             };
 
             return Ok(response);
@@ -116,7 +112,10 @@ namespace ApiCrud.Controllers
         public async Task<ActionResult> Delete(Guid id)
         {
             var tipoServico = await _context.TiposServico.FindAsync(id);
-            if (tipoServico == null) return NotFound();
+            if (tipoServico == null)
+            {
+                return NotFound();
+            }
 
             _context.TiposServico.Remove(tipoServico);
             await _context.SaveChangesAsync();

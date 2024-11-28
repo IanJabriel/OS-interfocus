@@ -27,8 +27,8 @@ namespace ApiCrud.Controller
             return Ok(ocorrencias);
         }
 
-        [HttpGet("{id:guid}")]
-        public async Task<ActionResult<Ocorrencia>> Get(Guid id)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Ocorrencia>> Get(int id)
         {
             var ocorrencia = await _context.Ocorrencias.FindAsync(id);
             if (ocorrencia == null) return NotFound();
@@ -49,8 +49,8 @@ namespace ApiCrud.Controller
             return CreatedAtAction(nameof(Get), new { id = ocorrencia.Id }, ocorrencia);
         }
 
-        [HttpPut("{id:guid}")]
-        public async Task<ActionResult> Put(Guid id, [FromBody] Ocorrencia ocorrencia)
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put(int id, [FromBody] Ocorrencia ocorrencia)
         {
             if (id != ocorrencia.Id)
             {
@@ -78,8 +78,8 @@ namespace ApiCrud.Controller
             return Ok(oldOcorrencia);
         }
 
-        [HttpDelete("{id:guid}")]
-        public async Task<ActionResult> Delete(Guid id)
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int id)
         {
             var ocorrencia = await _context.Ocorrencias.FindAsync(id);
             if (ocorrencia == null) return NotFound();

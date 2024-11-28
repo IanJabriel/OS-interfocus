@@ -3,6 +3,7 @@ using System;
 using ApiCrud.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApiCrud.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241125115532_arrumandoFKStatusOS")]
+    partial class arrumandoFKStatusOS
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -134,13 +137,23 @@ namespace ApiCrud.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Relational:JsonPropertyName", "id_os");
 
+                    b.Property<int>("OcorrenciaId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OrdemServicoId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IdOcorrencia");
 
                     b.HasIndex("IdOrdemServico");
 
-                    b.ToTable("OcorrenciasOS", (string)null);
+                    b.HasIndex("OcorrenciaId");
+
+                    b.HasIndex("OrdemServicoId");
+
+                    b.ToTable("OcorrenciasOS");
                 });
 
             modelBuilder.Entity("Interfocus.Models.OrdemServico", b =>
@@ -173,8 +186,7 @@ namespace ApiCrud.Migrations
                         .HasAnnotation("Relational:JsonPropertyName", "funcionario_fechou");
 
                     b.Property<int>("IdStatusOS")
-                        .HasColumnType("integer")
-                        .HasAnnotation("Relational:JsonPropertyName", "id_status_os");
+                        .HasColumnType("integer");
 
                     b.Property<int>("IdTipoServico")
                         .HasColumnType("integer")
@@ -232,6 +244,8 @@ namespace ApiCrud.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StatusOS");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "statusOS");
                 });
 
             modelBuilder.Entity("Interfocus.Models.TipoPlano", b =>
@@ -296,20 +310,38 @@ namespace ApiCrud.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Interfocus.Models.OrdemServico", null)
+                    b.HasOne("Interfocus.Models.OcorrenciaOS", null)
                         .WithMany()
                         .HasForeignKey("IdOrdemServico")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Interfocus.Models.Ocorrencia", "Ocorrencia")
+                        .WithMany()
+                        .HasForeignKey("OcorrenciaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Interfocus.Models.OrdemServico", "OrdemServico")
+                        .WithMany()
+                        .HasForeignKey("OrdemServicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ocorrencia");
+
+                    b.Navigation("OrdemServico");
                 });
 
             modelBuilder.Entity("Interfocus.Models.OrdemServico", b =>
                 {
-                    b.HasOne("Interfocus.Models.StatusOS", null)
+                    b.HasOne("Interfocus.Models.StatusOS", "StatusOS")
                         .WithMany()
                         .HasForeignKey("IdStatusOS")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("StatusOS");
                 });
 
             modelBuilder.Entity("Interfocus.Models.Plano", b =>

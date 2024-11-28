@@ -1,38 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Interfocus.Models
 {
     public class OrdemServico
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid IdTipoServico { get; set; }
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [JsonPropertyName("id_tipo_servico")]
+        public int IdTipoServico { get; set; }
+
+        [JsonPropertyName("data_agendamento")]
         public DateTime DataAgendamento { get; set; }
-        public Guid IdContrato { get; set; }
-        public Guid IdCliente { get; set; }
+
+        [JsonPropertyName("id_contrato")]
+        public int IdContrato { get; set; }
+
+        [JsonPropertyName("id_cliente")]
+        public int IdCliente { get; set; }
+
+        [JsonPropertyName("id_status_os")]
         public int IdStatusOS { get; set; }
-        public StatusOS StatusOS { get; set; }
 
-        public Guid IdFuncionarioAbriu { get; set; }
-        public Guid? IdFuncionarioFechou { get; set; }
+        [JsonPropertyName("funcionario_abriu")]
+        public int IdFuncionarioAbriu { get; set; }
 
-        public List<OcorrenciaOS> OcorrenciasOS { get; set; } = new List<OcorrenciaOS>();
+        [JsonPropertyName("funcionario_fechou")]
+        public int? IdFuncionarioFechou { get; set; }
 
-        public OrdemServico(Guid idTipoServico, DateTime dataAgendamento, Guid idContrato, Guid idCliente, Guid idFuncionarioAbriu, Guid? idFuncionarioFechou)
+        public OrdemServico(int idTipoServico, DateTime dataAgendamento, int idContrato, int idCliente, int idFuncionarioAbriu, int? idFuncionarioFechou, int idStatusOS)
         {
             IdTipoServico = idTipoServico;
             DataAgendamento = dataAgendamento;
             IdContrato = idContrato;
             IdCliente = idCliente;
-
-            StatusOS = new StatusOS
-            {
-                Descricao = "Aberto"
-            };
-            IdStatusOS = StatusOS.Id;
-
             IdFuncionarioAbriu = idFuncionarioAbriu;
             IdFuncionarioFechou = idFuncionarioFechou;
+            IdStatusOS = idStatusOS;
         }
 
         public OrdemServico() { }
