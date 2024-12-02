@@ -1,9 +1,9 @@
-﻿using ApiCrud.Data;
-using Interfocus.Models;
+﻿using ApiCrud.src.Data;
+using ApiCrud.src.Entidades;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApiCrud.Controllers
+namespace ApiCrud.src.Controller
 {
     [Route("api/[controller]")]
     [ApiController]

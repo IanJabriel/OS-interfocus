@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Interfocus.Models;
+using ApiCrud.src.Entidades;
 
 public static class ModelBuilderExtensions
 {

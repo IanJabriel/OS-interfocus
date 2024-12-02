@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using ApiCrud.Data;
+using ApiCrud.src.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

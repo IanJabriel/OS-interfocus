@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Interfocus.Models;
 
 using Microsoft.EntityFrameworkCore;
-using ApiCrud.Data;
+using ApiCrud.src.Data;
+using ApiCrud.src.Entidades;
 
-namespace Interfocus.Controllers
+namespace ApiCrud.src.Controller
 {
     [ApiController]
     [Route("api/[controller]")]

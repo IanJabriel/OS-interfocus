@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Interfocus.Models
+namespace ApiCrud.src.Entidades
 {
     public class TipoPlano
     {
