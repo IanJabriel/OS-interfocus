@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace Interfocus.Models
+namespace ApiCrud.src.Entidades
 {
     public class OrdemServico
     {

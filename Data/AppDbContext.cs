@@ -1,8 +1,8 @@
-﻿using Interfocus.Models;
+﻿using ApiCrud.src.Entidades;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace ApiCrud.Data
+namespace ApiCrud.src.Data
 {
     public class AppDbContext : DbContext
     {
