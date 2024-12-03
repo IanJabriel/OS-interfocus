@@ -1,20 +1,28 @@
-# Etapa de build
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-COPY . .
-RUN dotnet restore ApiCrud.csproj
-RUN dotnet tool install --global dotnet-ef
-ENV PATH="$PATH:/root/.dotnet/tools"
-RUN dotnet publish ApiCrud.csproj -c Release -o /app/out
-
-# Etapa de runtime
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
-WORKDIR /app
-COPY --from=build /app/out .
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
-
 EXPOSE 8080
+EXPOSE 8081
 
-ENTRYPOINT ["/app/entrypoint.sh", "dotnet", "ApiCrud.dll"]
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+
+RUN apt-get update && apt-get install -y libpq-dev
+
+WORKDIR /src
+COPY ["ApiCrud.csproj", "."]
+RUN dotnet restore "./ApiCrud.csproj"
+COPY . . 
+
+RUN dotnet tool install --global dotnet-ef
+
+WORKDIR /src
+RUN dotnet build "./ApiCrud.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "./ApiCrud.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+
+ENTRYPOINT ["dotnet", "ApiCrud.dll"]
