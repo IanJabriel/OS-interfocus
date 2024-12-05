@@ -21,6 +21,11 @@ builder.Services.AddCors(options =>
     });
 });
 
+//builder.WebHost.ConfigureKestrel(options =>
+//{
+//    options.ListenAnyIP(8080);  // Ou 0.0.0.0:8080 para Docker
+//});
+
 var app = builder.Build();
 
 app.UseCors("AllowAll");
@@ -33,11 +38,14 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.Migrate();
 }
 
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+
     app.UseSwagger();
     app.UseSwaggerUI();
-}
 
 app.UseRouting();
 app.UseAuthorization();
