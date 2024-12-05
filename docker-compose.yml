@@ -1,40 +1,45 @@
 ﻿services:
-  os_api:
+  api_os:
     container_name: api_os
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: jabriel23/api_os
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Host=postgres_os;Database=interfocus;Username=postgres;Password=postgres@123
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD}
     ports:
       - "8080:8080"
     networks:
-      - services
+      - os-interfocus_service
     depends_on:
-      - db 
-    entrypoint: ["dotnet", "ApiCrud.dll"]
+      - db
+    volumes:
+      - ./src:/app-dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
 
   db:
     image: postgres:latest
-    container_name: postgres_os
+    container_name: postgres_os 
     environment:
-      POSTGRES_DB: interfocus
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres@123
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - services
+      - os-interfocus_service
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      interval: 10s
+      timeout: 10s
+      retries: 15
 
 volumes:
   postgres_data:
 
 networks:
-  services:
-    driver: bridge
+  os-interfocus_service:
