@@ -1,5 +1,5 @@
 ﻿services:
-  os_api:
+  api_os:
     container_name: api_os
     build:
       context: .
@@ -10,7 +10,7 @@
     ports:
       - "8080:8080"
     networks:
-      - services
+      - os-interfocus_service
     depends_on:
       - db
     healthcheck:
@@ -18,29 +18,28 @@
       interval: 10s
       timeout: 3s
       retries: 5
-    entrypoint: ["dotnet", "ApiCrud.dll"]
 
   db:
     image: postgres:latest
-    container_name: postgres_os
+    container_name: postgres_os 
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - services
+      - os-interfocus_service
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 10s
       retries: 15
 
-
 volumes:
   postgres_data:
 
 networks:
-  services:
-    driver: bridge
+  os-interfocus_service:
