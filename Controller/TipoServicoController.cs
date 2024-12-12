@@ -31,7 +31,7 @@ namespace ApiCrud.src.Controller
             return Ok(tipoServicos);
         }
 
-        [HttpGet("{id:guid}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<object>> Get(int id)
         {
             var tipoServico = await _context.TiposServico
@@ -72,7 +72,7 @@ namespace ApiCrud.src.Controller
             return CreatedAtAction(nameof(Get), new { id = tipoServico.Id }, response);
         }
 
-        [HttpPut("{id:guid}")]
+        [HttpPut("{id:int}")]
         public async Task<ActionResult> Put(int id, [FromBody] TipoServico tipoServico)
         {
             if (id != tipoServico.Id)
@@ -108,8 +108,8 @@ namespace ApiCrud.src.Controller
             return Ok(response);
         }
 
-        [HttpDelete("{id:guid}")]
-        public async Task<ActionResult> Delete(Guid id)
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int id)
         {
             var tipoServico = await _context.TiposServico.FindAsync(id);
             if (tipoServico == null)
